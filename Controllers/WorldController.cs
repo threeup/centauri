@@ -9,27 +9,28 @@ namespace centauri.Controllers
 {
     [ApiController]
     [Route("")]
-    public class WeatherForecastController : ControllerBase
+    public class WorldController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<WorldController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WorldController(ILogger<WorldController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<Tile> Get()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            _logger.LogInformation("generating 5");
+            return Enumerable.Range(1, 5).Select(index => new Tile
             {
-                Date = DateTime.Now.AddDays(index),
+                Layer = new TileLayer{Heat = rng.Next(5)},
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
