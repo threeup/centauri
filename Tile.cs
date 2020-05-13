@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 
 namespace centauri
 {
     public class Tile
     {
-        public TileLayer Layer { get; set; }
+        public Char TileChar { get; set; }
+        public List<TileLayer> Layers;
 
         public int TemperatureC { get; set; }
 

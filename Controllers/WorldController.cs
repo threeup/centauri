@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using centauri.generator;
 
 namespace centauri.Controllers
 {
@@ -11,10 +12,7 @@ namespace centauri.Controllers
     [Route("")]
     public class WorldController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+
 
         private readonly ILogger<WorldController> _logger;
 
@@ -23,18 +21,27 @@ namespace centauri.Controllers
             _logger = logger;
         }
 
+
         [HttpGet]
-        public IEnumerable<Tile> Get()
+        public IEnumerable<string> Get()
         {
-            var rng = new Random();
-            _logger.LogInformation("generating 5");
-            return Enumerable.Range(1, 5).Select(index => new Tile
+            _logger.LogInformation("generating 64");
+            Tile[] tiles;
+            WorldGenerator.Generate(8,8, out tiles);
+
+            var sb = new System.Text.StringBuilder();
+            int counter = 0;
+            foreach(Tile t in tiles)
             {
-                Layer = new TileLayer{Heat = rng.Next(5)},
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                sb.Append(t.TileChar, 1);
+                if(++counter == 8)
+                {
+                    counter=0;
+                    sb.AppendLine();
+                }
+            }
+
+            return new string[]{sb.ToString()};
         }
     }
 }
