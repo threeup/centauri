@@ -23,7 +23,7 @@ namespace centauri.Controllers
 
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get()
         {
             _logger.LogInformation("generating 64");
             Tile[] tiles;
@@ -31,17 +31,47 @@ namespace centauri.Controllers
 
             var sb = new System.Text.StringBuilder();
             int counter = 0;
+            
+            sb.Append('{', 1);
+            sb.AppendLine();
+            sb.Append("   \"tile\":[");
+            sb.AppendLine();
+            sb.Append("       ");
             foreach(Tile t in tiles)
             {
                 sb.Append(t.TileChar, 1);
+                sb.Append(',', 1);
                 if(++counter == 8)
                 {
                     counter=0;
                     sb.AppendLine();
+                    sb.Append("       ");
                 }
             }
+            sb.AppendLine();
+            sb.Append("   ],");
+            sb.AppendLine();
+            sb.Append("   \"temperature\" : [");
+            sb.AppendLine();
+            sb.Append("       ");
+            foreach(Tile t in tiles)
+            {
+                sb.Append(t.TemperatureC.ToString());
+                sb.Append(',', 1);
+                if(++counter == 8)
+                {
+                    counter=0;
+                    sb.AppendLine();
+                    sb.Append("       ");
+                }
+            }
+            sb.AppendLine();
+            sb.Append("   ]");
 
-            return new string[]{sb.ToString()};
+
+            sb.AppendLine();
+            sb.Append('}', 1);
+            return sb.ToString();
         }
     }
 }
