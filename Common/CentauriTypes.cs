@@ -3,28 +3,52 @@ using System.Collections.Generic;
 
 namespace centauri
 {
-    public class CentauriTile
+    
+    public enum TileType
     {
-        public Char TileChar { get; set; }
-        public List< CentauriLayer> Layers;
+        Ice,
+        Forest,
+        Desert,
+        Grass,
+        Ocean,
+        Lava,
+        Ash,
+        Cloud,
+    };
+
+
+    public class Tile
+    {
+        public TileType TileType { get; set; }
+        public List< TileLayer> Layers;
 
         public int TemperatureC { get; set; }
 
         public string Summary { get; set; }
     }
     
-    public class CentauriLayer
+    public class TileLayer
     {
         public int Heat { get; set; }
     }
 
-    public class CentauriData
+
+    [Serializable]
+    public class VerboseMap
     {
         public int width;
         public int height;
-        public CentauriTile[] tiles;
+        public string[] tileChar;
+        public int[] temperatureC;
+    }
 
-        public CentauriData(int inWidth, int inHeight)
+    public class Map
+    {
+        public int width;
+        public int height;
+        public Tile[] tiles;
+
+        public Map(int inWidth, int inHeight)
         {
             width = inWidth;
             height = inHeight;
