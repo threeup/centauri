@@ -14,28 +14,29 @@ namespace centauri.generator
             'F', 'B', 'C', 'X',
         };
 
-        static int GetTileIndex(int x, int y)
+        static int GetTileIndex(int x, int y, int w)
         {
-            return y*8+x;
+            return y*w+x;
         }
 
-        public static void Generate(int w, int h, out Tile[] tiles)
+        public static void Generate(int seed, ref CentauriData ceData)
         {
             
-            var rng = new Random();
-            tiles = new Tile[w*h];
-            for (int i=0; i<w; ++i)
+            var rng = seed > 0 ? new Random(seed) : new Random();
+            ceData.tiles = new CentauriTile[ceData.width*ceData.height];
+            
+            for(int j=0; j<ceData.height; ++j)
             {
-                for(int j=0; j<h; ++j)
+                for (int i=0; i<ceData.width; ++i)
                 {
-                    int idx = GetTileIndex(i,j);
-                    tiles[idx] = new Tile{
-                        Layers = new List<TileLayer>(),
+                    int idx = GetTileIndex(i,j,ceData.width);
+                    ceData.tiles[idx] = new CentauriTile{
+                        Layers = new List< CentauriLayer>(),
                         TileChar = TileChars[rng.Next(TileChars.Length)],
                         TemperatureC = rng.Next(-20, 55),
                         Summary = Summaries[rng.Next(Summaries.Length)],
                     };
-                    tiles[idx].Layers.Add(new TileLayer{Heat = rng.Next(5)});
+                    ceData.tiles[idx].Layers.Add(new  CentauriLayer{Heat = rng.Next(5)});
                 }
             }
         }
