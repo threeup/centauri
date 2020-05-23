@@ -4,10 +4,6 @@ namespace centauri
     public class WorldLib
     {
 
-        public int GetIndex(Map ceData, int x, int y)
-        {
-            return y * ceData.width + x;
-        }
 
         public static TileType ConvertCharToTileType(char c)
         {

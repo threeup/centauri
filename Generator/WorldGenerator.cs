@@ -15,26 +15,29 @@ namespace centauri.generator
             return y*w+x;
         }
 
-        public static void Generate(int seed, ref Map ceData)
+        public static void Generate(int seed, ref Map map)
         {
+            var generateSeed = seed > 0 ? seed : 1234;
+            var rng = new Random(generateSeed);
+            map.tiles = new Tile[map.Width * map.Height];
             
-            var rng = seed > 0 ? new Random(seed) : new Random();
-            ceData.tiles = new Tile[ceData.width*ceData.height];
-            
-            for(int j=0; j<ceData.height; ++j)
+            for(var itY=0; itY<map.Height; ++itY)
             {
-                for (int i=0; i<ceData.width; ++i)
+                for (var itX=0; itX<map.Width; ++itX)
                 {
-                    int idx = GetTileIndex(i,j,ceData.width);
-                    char c = TileChars[rng.Next(TileChars.Length)];
-                    ceData.tiles[idx] = new Tile{
-                        Layers = new List< TileLayer>(),
+                    var idx = GetTileIndex(itX,itY,map.Width);
+                    var c = TileChars[rng.Next(TileChars.Length)];
+                    map.tiles[idx] = new Tile{
+                        Location = new Vec2(itX, itY),
+                        Layers = new Dictionary<LayerType, TileLayer>(),
                         TileType = WorldLib.ConvertCharToTileType(c),
-                        TemperatureC = rng.Next(-20, 55),
+                        Height = rng.Next(-20, 55),
                     };
-                    ceData.tiles[idx].Layers.Add(new  TileLayer{Heat = rng.Next(5)});
+                    var heatLayer = new HeatLayer{Heat = rng.Next(-20, 55)};
+                    map.tiles[idx].Layers.Add(LayerType.Heat, heatLayer);
                 }
             }
+            VoronoiLib.Voronoi(generateSeed, map.Dimensions, ref map);
         }
     }
 

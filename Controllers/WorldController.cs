@@ -46,7 +46,7 @@ namespace centauri.Controllers
                 }
                 sb.Append(inFunc(t));
                 counter++;
-                if(counter == ceData.width)
+                if(counter == ceData.Width)
                 {
                     counter=0;
                     row++;
@@ -62,8 +62,8 @@ namespace centauri.Controllers
         [HttpGet]
         public string Get(int width, int height, int seed)
         {
-            int worldWidth = width > 0 ? width : 32;
-            int worldHeight = height > 0 ? height : 20;
+            int worldWidth = width > 0 ? width : 18;
+            int worldHeight = height > 0 ? height : 15;
             int worldSeed = seed > 0 ? seed : 0;
             int total = worldWidth*worldHeight;
             _logger.LogInformation("generating"+total.ToString());
@@ -77,10 +77,10 @@ namespace centauri.Controllers
             
             sb.AppendLine();
             sb.Append("   \"width\": ");
-            sb.Append(ceData.width.ToString());
+            sb.Append(ceData.Width.ToString());
             sb.AppendLine(",");
             sb.Append("   \"height\": ");
-            sb.Append(ceData.height.ToString());
+            sb.Append(ceData.Height.ToString());
             sb.AppendLine(",");
 
             Func<Tile, string> tileCharFunc = (t) =>
@@ -88,13 +88,27 @@ namespace centauri.Controllers
                 TileType tileType = t.TileType;
                 return WorldLib.ConvertTileTypeToChar(tileType).ToString();
             };
-            Func<Tile, string> tileTempFunc = (t) =>
+            Func<Tile, string> tileHeightFunc = (t) =>
             {
-                return t.TemperatureC.ToString();
+                return t.Height.ToString();
+            };
+            
+            Func<Tile, string> tileColorFunc = (t) =>
+            {
+                if(t.Layers.ContainsKey(LayerType.Voronoi))
+                {
+                    VoronoiLayer layer = t.Layers[LayerType.Voronoi] as VoronoiLayer;
+                    return layer.VoronoiColor.ToHexString();
+                }
+                else
+                {
+                    return "#000000";
+                }
             };
 
             GetProperty("tileChar",tileCharFunc, false, ref ceData, ref sb);
-            GetProperty("temperatureC",tileTempFunc, true, ref ceData, ref sb);
+            GetProperty("height",tileHeightFunc, true, ref ceData, ref sb);
+            GetProperty("color",tileColorFunc, true, ref ceData, ref sb);
             sb.AppendLine("   \"eof\": \"eof\"");
             sb.Append('}', 1);
             return sb.ToString();
