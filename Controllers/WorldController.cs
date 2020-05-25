@@ -22,7 +22,7 @@ namespace centauri.Controllers
         }
 
         static void GetProperty(string label, Func<Tile, string> inFunc, 
-            bool commas, ref Map ceData, ref System.Text.StringBuilder sb)
+            bool commas, bool quotes, ref Map ceData, ref System.Text.StringBuilder sb)
         {
             int counter = 0;
             int row = 0;
@@ -38,7 +38,11 @@ namespace centauri.Controllers
                         sb.Append(',', 1);        
                     }
                     sb.AppendLine();
-                    sb.Append("       \"");
+                    sb.Append("       ");
+                    if(quotes)
+                    {
+                        sb.Append('"', 1);
+                    }
                 }
                 if(commas && counter > 0)
                 {
@@ -50,7 +54,10 @@ namespace centauri.Controllers
                 {
                     counter=0;
                     row++;
-                    sb.Append('"', 1); 
+                    if(quotes)
+                    {
+                        sb.Append('"', 1); 
+                    }
                 }
             }
             sb.AppendLine();
@@ -88,9 +95,9 @@ namespace centauri.Controllers
                 TileType tileType = t.TileType;
                 return WorldLib.ConvertTileTypeToChar(tileType).ToString();
             };
-            Func<Tile, string> tileHeightFunc = (t) =>
+            Func<Tile, string> tileElevationFunc = (t) =>
             {
-                return t.Height.ToString();
+                return t.Elevation.ToString();
             };
             
             Func<Tile, string> tileColorFunc = (t) =>
@@ -98,7 +105,7 @@ namespace centauri.Controllers
                 if(t.Layers.ContainsKey(LayerType.Voronoi))
                 {
                     VoronoiLayer layer = t.Layers[LayerType.Voronoi] as VoronoiLayer;
-                    return layer.VoronoiColor.ToHexString();
+                    return layer.VoronoiColor.ToWideNumberString();
                 }
                 else
                 {
@@ -106,9 +113,9 @@ namespace centauri.Controllers
                 }
             };
 
-            GetProperty("tileChar",tileCharFunc, false, ref ceData, ref sb);
-            GetProperty("height",tileHeightFunc, true, ref ceData, ref sb);
-            GetProperty("color",tileColorFunc, true, ref ceData, ref sb);
+            GetProperty("tileChar",tileCharFunc, false, true, ref ceData, ref sb);
+            GetProperty("tileElevation",tileElevationFunc, true, false, ref ceData, ref sb);
+            GetProperty("tileColor",tileColorFunc, true, false, ref ceData, ref sb);
             sb.AppendLine("   \"eof\": \"eof\"");
             sb.Append('}', 1);
             return sb.ToString();

@@ -5,21 +5,21 @@ namespace centauri.generator
     public class VoronoiLib
     {
 
-        public static List<Vec2> MakeVoronoiSites(int seed, Vec2 dimensions, int count)
+        public static List<CVec2> MakeVoronoiSites(int seed, CVec2 dimensions, int count)
         {
-            var result = new List<Vec2>();
+            var result = new List<CVec2>();
             var seedOffset = 2939;
             
             var rng = seed > 0 ? new Random(seed+seedOffset) : new Random();
             for(var i = 0; i<count; ++i)
             {
-                Vec2 next = new Vec2(rng.Next(dimensions.x), rng.Next(dimensions.y));
+                CVec2 next = new CVec2(rng.Next(dimensions.x), rng.Next(dimensions.y));
                 result.Add(next);
             }
             return result;
         }
 
-        public static Vec3 GenerateColor(int num)
+        public static CVec3 GenerateColor(int num)
         {
             int r=128,g=128,b=128;
             int amount = 48;
@@ -57,12 +57,12 @@ namespace centauri.generator
                 }
                 amount /= 2;
             }
-            return new Vec3(r,g,b);
+            return new CVec3(r,g,b);
         }
 
-        public static void Voronoi(int seed, Vec2 dimensions, ref Map map)
+        public static void Voronoi(int seed, CVec2 dimensions, ref Map map)
         {
-            List<Vec2> sites = MakeVoronoiSites(seed, dimensions, 6);
+            List<CVec2> sites = MakeVoronoiSites(seed, dimensions, 6);
             for(var itY = 0; itY < dimensions.y; ++itY)
             {
                 for(var itX = 0; itX < dimensions.x; ++itX)
@@ -72,7 +72,7 @@ namespace centauri.generator
                     float bestDistance = 9999999;
                     for(var itSite = 0; itSite < sites.Count; ++itSite)
                     {
-                        Vec2 site = sites[itSite];
+                        CVec2 site = sites[itSite];
                         float siteDistance = site.DistanceTo(map.tiles[idx].Location);
                         if(itSite == 0)
                         {

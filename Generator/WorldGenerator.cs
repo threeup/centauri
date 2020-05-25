@@ -28,10 +28,10 @@ namespace centauri.generator
                     var idx = GetTileIndex(itX,itY,map.Width);
                     var c = TileChars[rng.Next(TileChars.Length)];
                     map.tiles[idx] = new Tile{
-                        Location = new Vec2(itX, itY),
+                        Location = new CVec2(itX, itY),
                         Layers = new Dictionary<LayerType, TileLayer>(),
                         TileType = WorldLib.ConvertCharToTileType(c),
-                        Height = rng.Next(-20, 55),
+                        Elevation = rng.Next(-20, 55),
                     };
                     var heatLayer = new HeatLayer{Heat = rng.Next(-20, 55)};
                     map.tiles[idx].Layers.Add(LayerType.Heat, heatLayer);

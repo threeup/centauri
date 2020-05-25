@@ -3,24 +3,30 @@ using System;
 namespace centauri
 {
     
-    public struct Vec2 
+    public struct CVec2 
     {
-        public static Vec2 Invalid = new Vec2(-1, -1);
-        public static Vec2 NegativeOne = new Vec2(-1, -1);
-        public static Vec2 Zero = new Vec2(0, 0);
-        public static Vec2 One = new Vec2(1, 1);
+        public static CVec2 Invalid = new CVec2(-1, -1);
+        public static CVec2 NegativeOne = new CVec2(-1, -1);
+        public static CVec2 Zero = new CVec2(0, 0);
+        public static CVec2 One = new CVec2(1, 1);
         public int x;
         public int y;
 
-        public Vec2(int inX, int inY)
+        public CVec2(int inX, int inY)
         {
             x = inX;
             y = inY;
         }
+        public CVec2(int inWide)
+        {
+            y = inWide % 1000;
+            inWide /= 1000;
+            x = inWide % 1000;
+        }
 
         public override bool Equals(object other)
         {
-            if (other is Vec2 vecOther)
+            if (other is CVec2 vecOther)
             {
                 return vecOther.x == x && vecOther.y == y;
             }
@@ -28,17 +34,17 @@ namespace centauri
             return false;
         }
 
-        public bool Equals(Vec2 other)
+        public bool Equals(CVec2 other)
         {
             return x == other.x && y == other.y;
         }
 
-        public static  bool operator ==(Vec2 a, Vec2 b)
+        public static  bool operator ==(CVec2 a, CVec2 b)
         {
             return a.Equals(b);
         }
 
-        public static bool operator !=(Vec2 a, Vec2 b)
+        public static bool operator !=(CVec2 a, CVec2 b)
         {
             return !(a == b);
         }
@@ -51,38 +57,38 @@ namespace centauri
             }
         }
 
-        public static Vec2 operator -(Vec2 a, Vec2 b)
+        public static CVec2 operator -(CVec2 a, CVec2 b)
         {
-            return new Vec2(a.x- b.x, a.y - b.y);
+            return new CVec2(a.x- b.x, a.y - b.y);
         }
 
-        public static Vec2 operator +(Vec2 a, Vec2 b)
+        public static CVec2 operator +(CVec2 a, CVec2 b)
         {
-            return new Vec2(a.x + b.x, a.y + b.y);
+            return new CVec2(a.x + b.x, a.y + b.y);
         }
 
-        public static Vec2 operator -(Vec2 val)
+        public static CVec2 operator -(CVec2 val)
         {
-            return new Vec2(-val.x, -val.y);
+            return new CVec2(-val.x, -val.y);
         }
 
-        public static Vec2 operator *(Vec2 val, int multiplier)
+        public static CVec2 operator *(CVec2 val, int multiplier)
         {
-            return new Vec2(val.x * multiplier, val.y * multiplier);
+            return new CVec2(val.x * multiplier, val.y * multiplier);
         }
         
-        public float DistanceSqrTo(Vec2 o)
+        public float DistanceSqrTo(CVec2 o)
         {
             return (float)(Math.Pow(x - o.x, 2) + Math.Pow(y - o.y, 2));
         }
 
-        public float DistanceTo(Vec2 o)
+        public float DistanceTo(CVec2 o)
         {
             return (float)Math.Sqrt(DistanceSqrTo(o));
         }
 
 
-        public float Distance(Vec2 a, Vec2 b)
+        public float Distance(CVec2 a, CVec2 b)
         {
             return a.DistanceTo(b);
         }
@@ -95,12 +101,17 @@ namespace centauri
         {
             return $"({x}, {y})";
         }
-
-        public static Vec2 Parse(string text)
+        public string ToWideNumberString()
+        {
+            int byteX = (x%256)*1000000;
+            int byteY = (y%256)*1000;
+            return (byteX+byteY).ToString();
+        }
+        public static CVec2 Parse(string text)
         {
             if(text.Length < 1)
             {
-                return Vec2.Zero;
+                return CVec2.Zero;
             }
             if (text[0] == '(' && text[text.Length-1] == ')')
             {
@@ -111,35 +122,44 @@ namespace centauri
             {
                 int x = int.Parse(words[0]);
                 int y = int.Parse(words[1]);
-                return new Vec2(x, y);
+                return new CVec2(x, y);
             }
-            return Vec2.Zero;
+            return CVec2.Zero;
         }
 
     }
 
 
     
-    public struct Vec3 
+    public struct CVec3 
     {
-        public static Vec3 Invalid = new Vec3(-1, -1, -1);
-        public static Vec3 NegativeOne = new Vec3(-1, -1, -1);
-        public static Vec3 Zero = new Vec3(0, 0, 0);
-        public static Vec3 One = new Vec3(1, 1, 1);
+        public static CVec3 Invalid = new CVec3(-1, -1, -1);
+        public static CVec3 NegativeOne = new CVec3(-1, -1, -1);
+        public static CVec3 Zero = new CVec3(0, 0, 0);
+        public static CVec3 One = new CVec3(1, 1, 1);
         public int x;
         public int y;
         public int z;
 
-        public Vec3(int inX, int inY, int inZ)
+        public CVec3(int inX, int inY, int inZ)
         {
             x = inX;
             y = inY;
             z = inZ;
         }
+        public CVec3(int inWide)
+        {
+            z = inWide % 1000;
+            inWide /= 1000;
+            y = inWide % 1000;
+            inWide /= 1000;
+            x = inWide % 1000;
+        }
+
 
         public override bool Equals(object other)
         {
-            if (other is Vec3 vecOther)
+            if (other is CVec3 vecOther)
             {
                 return vecOther.x == x && vecOther.y == y && vecOther.z == z;
             }
@@ -147,17 +167,17 @@ namespace centauri
             return false;
         }
 
-        public bool Equals(Vec3 other)
+        public bool Equals(CVec3 other)
         {
             return x == other.x && y == other.y && z == other.z;
         }
 
-        public static  bool operator ==(Vec3 lhs, Vec3 rhs)
+        public static  bool operator ==(CVec3 lhs, CVec3 rhs)
         {
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(Vec3 lhs, Vec3 rhs)
+        public static bool operator !=(CVec3 lhs, CVec3 rhs)
         {
             return !(lhs == rhs);
         }
@@ -170,36 +190,36 @@ namespace centauri
             }
         }
 
-        public static Vec3 operator -(Vec3 lhs, Vec3 rhs)
+        public static CVec3 operator -(CVec3 lhs, CVec3 rhs)
         {
-            return new Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+            return new CVec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
         }
 
-        public static Vec3 operator +(Vec3 lhs, Vec3 rhs)
+        public static CVec3 operator +(CVec3 lhs, CVec3 rhs)
         {
-            return new Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+            return new CVec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
         }
 
-        public static Vec3 operator -(Vec3 val)
+        public static CVec3 operator -(CVec3 val)
         {
-            return new Vec3(-val.x, -val.y, -val.z);
+            return new CVec3(-val.x, -val.y, -val.z);
         }
 
-        public static Vec3 operator *(Vec3 val, int multiplier)
+        public static CVec3 operator *(CVec3 val, int multiplier)
         {
-            return new Vec3(val.x * multiplier, val.y * multiplier, val.z * multiplier);
+            return new CVec3(val.x * multiplier, val.y * multiplier, val.z * multiplier);
         }
-        public float DistanceSqrTo(Vec3 o)
+        public float DistanceSqrTo(CVec3 o)
         {
             return (float)(Math.Pow(x - o.x, 2) + Math.Pow(y - o.y, 2) + Math.Pow(z - o.z, 2));
         }
 
-        public float DistanceTo(Vec3 o)
+        public float DistanceTo(CVec3 o)
         {
             return (float)Math.Sqrt(DistanceSqrTo(o));
         }
 
-        public float Distance(Vec3 a, Vec3 b)
+        public float Distance(CVec3 a, CVec3 b)
         {
             return (float)Math.Sqrt(a.DistanceSqrTo(b));
         }
@@ -220,12 +240,20 @@ namespace centauri
             string hexZ = (z % 256).ToString("X2");
             return $"#{hexX}{hexY}{hexZ}";
         }
+        public string ToWideNumberString()
+        {
+            int byteX = (x%256)*1000000;
+            int byteY = (y%256)*1000;
+            int byteZ = (z%256);
+            return (byteX+byteY+byteZ).ToString();
+        }
 
-        public static Vec3 Parse(string text)
+
+        public static CVec3 Parse(string text)
         {
             if(text.Length < 1)
             {
-                return Vec3.Invalid;
+                return CVec3.Invalid;
             }
             if (text[0] == '(' && text[text.Length-1] == ')')
             {
@@ -237,9 +265,9 @@ namespace centauri
                 int x = int.Parse(words[0]);
                 int y = int.Parse(words[1]);
                 int z = int.Parse(words[2]);
-                return new Vec3(x, y, z);
+                return new CVec3(x, y, z);
             }
-            return Vec3.Invalid;
+            return CVec3.Invalid;
         }
 
     }

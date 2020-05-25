@@ -25,13 +25,13 @@ namespace centauri
 
     public class Tile
     {
-        public Vec2 Location { get; set; }
+        public CVec2 Location { get; set; }
         public int X { get => Location.x; }
         public int Y { get => Location.y; }
         public TileType TileType { get; set; }
         public Dictionary<LayerType, TileLayer> Layers;
 
-        public int Height { get; set; }
+        public int Elevation { get; set; }
 
         public string Summary { get; set; }
     }
@@ -48,8 +48,8 @@ namespace centauri
 
     public class VoronoiLayer : TileLayer
     {
-        public Vec2 VoronoiSite { get; set; }
-        public Vec3 VoronoiColor { get; set; }
+        public CVec2 VoronoiSite { get; set; }
+        public CVec3 VoronoiColor { get; set; }
     }
 
 
@@ -64,7 +64,7 @@ namespace centauri
 
     public class Map
     {
-        public Vec2 Dimensions { get; set; }
+        public CVec2 Dimensions { get; set; }
         public int Width { get => Dimensions.x; }
         public int Height { get => Dimensions.y; }
         public Tile[] tiles;
@@ -73,7 +73,7 @@ namespace centauri
 
         public Map(int inWidth, int inHeight)
         {
-            Dimensions = new Vec2(inWidth, inHeight);
+            Dimensions = new CVec2(inWidth, inHeight);
         }
         
     }
